@@ -1,15 +1,17 @@
-import { Hanakuso } from "hanakuso/Haaaa";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { Board } from "board";
+import { GridBoard } from "gridBoard";
+import { NotFound } from "./NotFound";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload
-        </p>
-        <Hanakuso hanakuso={{ haha: "unmohahahahahaha" }} />
-      </header>
-    </div>
+    <BrowserRouter>
+      <Switch>
+        <Route component={Board} path="/" exact />
+        <Route component={GridBoard} path="/gridboard" exact />
+        <Route component={NotFound} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 
