@@ -1,4 +1,4 @@
-import React from "react";
+import { Hanakuso } from "hanakuso/Haaaa";
 
 function App() {
   return (
@@ -7,6 +7,7 @@ function App() {
         <p>
           Edit <code>src/App.tsx</code> and save to reload
         </p>
+        <Hanakuso hanakuso={{ haha: "unmo" }} />
       </header>
     </div>
   );
