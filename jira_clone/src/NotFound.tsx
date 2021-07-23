@@ -1,3 +1,3 @@
 import { Redirect } from "react-router";
 
-export const NotFound = () => <Redirect to={"/"} />;
+export const NotFound = () => <Redirect to={"/board"} />;
