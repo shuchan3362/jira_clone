@@ -4,7 +4,7 @@ export const TabsMap = {
   gridboard: { label: "グリッド", value: 2, key: "gridboard" },
 };
 
-export const DefaultTaskStageMap = {
+export const DefaultTaskStatusMap = {
   Todo: { id: 1, title: "todo" },
   InProgress: { id: 2, title: "inprogress" },
   Done: { id: 3, title: "done" },

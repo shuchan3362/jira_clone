@@ -1,11 +1,11 @@
-export type StageItemType = {
-  id: number;
+export type StatusItemType = {
+  id: string;
   title: string;
   content: string;
-  stageId: number;
+  statusId: number;
 };
 
-export type StageType = {
+export type StatusType = {
   id: number;
   title: string;
 };

@@ -33,7 +33,7 @@ export const Header: React.FC<Props> = () => {
   const locationName = history.location.pathname.slice(1) as LocationName;
   const defaultIndex = TabsMap[locationName].value;
   return (
-    <Container maxW="5xl" p="unset">
+    <Container maxW="5xl">
       <HStack align="baseline">
         <Tabs
           variant="enclosed"
@@ -43,7 +43,9 @@ export const Header: React.FC<Props> = () => {
         >
           <TabList>
             {Object.values(TabsMap).map((tab) => (
-              <Tab key={tab.value}>{tab.label}</Tab>
+              <Tab key={tab.value} fontWeight="bold">
+                {tab.label}
+              </Tab>
             ))}
           </TabList>
         </Tabs>

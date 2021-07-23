@@ -1,16 +1,16 @@
 import { Container, HStack } from "@chakra-ui/react";
-import { DefaultTaskStageMap } from "../constants";
+import { DefaultTaskStatusMap } from "../constants";
 import React from "react";
-import { Stage } from "./Stage";
+import { Status } from "./Status";
 
 type Props = {};
 
 export const Content: React.FC<Props> = () => {
   return (
-    <Container maxW="5xl" borderRadius={4} bg="gray.50" p={4}>
+    <Container maxW="5xl" borderRadius={4} p={4}>
       <HStack align="stretch" spacing={4}>
-        {Object.values(DefaultTaskStageMap).map((stage) => (
-          <Stage key={stage.id} stage={stage} />
+        {Object.values(DefaultTaskStatusMap).map((stage) => (
+          <Status key={stage.id} stage={stage} />
         ))}
       </HStack>
     </Container>
