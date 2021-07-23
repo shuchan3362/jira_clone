@@ -3,6 +3,7 @@ export type StatusItemType = {
   title: string;
   content: string;
   statusId: number;
+  order: number;
 };
 
 export type StatusType = {

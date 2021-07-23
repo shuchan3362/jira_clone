@@ -2,20 +2,17 @@ import React from "react";
 import { Flex, VStack, Wrap } from "@chakra-ui/react";
 import { ItemsByStatus } from "./ItemsByStatus";
 import { StatusItemType, StatusType } from "type";
-import { db } from "../firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import { DroppableProvided } from "react-beautiful-dnd";
 
-type Props = { stage: StatusType };
+type Props = {
+  itemsByStatus: StatusItemType[];
+  status: StatusType;
+  provided: DroppableProvided;
+};
 
 export const Status: React.FC<Props> = (props) => {
-  const { stage } = props;
-  const [items] = useCollectionData<StatusItemType>(
-    db.collection("statusItem"),
-    {
-      idField: "id",
-    }
-  );
-  const itemsByStage = items?.filter((item) => item.statusId === stage.id);
+  const { status, provided, itemsByStatus } = props;
+
   return (
     <VStack
       flex={1}
@@ -35,12 +32,19 @@ export const Status: React.FC<Props> = (props) => {
         p={2}
         justify="center"
       >
-        {stage.title}
+        {status.title}
       </Flex>
-      <Wrap w="100%" direction={"column"}>
-        {itemsByStage?.map((item) => (
-          <ItemsByStatus key={item.id} item={item} />
+      <Wrap
+        ref={provided.innerRef}
+        {...provided.droppableProps}
+        w="100%"
+        h="100%"
+        direction={"column"}
+      >
+        {itemsByStatus?.map((item, index) => (
+          <ItemsByStatus key={item.id} item={item} index={index} />
         ))}
+        {provided.placeholder}
       </Wrap>
     </VStack>
   );
