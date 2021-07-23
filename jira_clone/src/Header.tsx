@@ -1,13 +1,11 @@
 import {
   HStack,
   Button,
-  Stack,
   useDisclosure,
   Tabs,
   TabList,
   Tab,
-  TabPanels,
-  TabPanel,
+  Container,
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { Modal } from "./Modal";
@@ -21,6 +19,7 @@ type LocationName = keyof typeof TabsMap;
 export const Header: React.FC<Props> = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
+
   const handleChangeTab = useCallback(
     (tabIndex: number) => {
       const locationTabValue = Object.values(TabsMap).find(
@@ -30,10 +29,11 @@ export const Header: React.FC<Props> = () => {
     },
     [history]
   );
+
   const locationName = history.location.pathname.slice(1) as LocationName;
   const defaultIndex = TabsMap[locationName].value;
   return (
-    <>
+    <Container maxW="5xl" p="unset">
       <HStack align="baseline">
         <Tabs
           variant="enclosed"
@@ -50,6 +50,6 @@ export const Header: React.FC<Props> = () => {
         <Button onClick={onOpen}>作成</Button>
       </HStack>
       <Modal isOpen={isOpen} onClose={onClose} />
-    </>
+    </Container>
   );
 };

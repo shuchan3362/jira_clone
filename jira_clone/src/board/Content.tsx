@@ -1,54 +1,18 @@
-import {
-  Box,
-  Container,
-  VStack,
-  Wrap,
-  WrapItem,
-  Stack,
-  Grid,
-  GridItem,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Container, HStack } from "@chakra-ui/react";
+import { DefaultTaskStageMap } from "../constants";
 import React from "react";
+import { Stage } from "./Stage";
 
 type Props = {};
 
 export const Content: React.FC<Props> = () => {
   return (
-    <Container>
-      {/* <Grid
-        h="xl"
-        templateRows="repeat(auto-fill, minmax(100px, 1fr))"
-        templateColumns="repeat(auto-fill, minmax(100px, 1fr))"
-        gap={4}
-      >
-        <GridItem rowSpan={2} colSpan={2} bg="tomato" />
-        <GridItem rowSpan={2} colSpan={2} bg="papayawhip" />
-        <GridItem rowSpan={2} colSpan={2} bg="papayawhip" />
-        <GridItem rowSpan={2} colSpan={2} bg="tomato" />
-      </Grid> */}
-      <VStack>
-        <Wrap direction={"column"}>
-          {items.map((item, index) => (
-            <WrapItem key={index}>
-              <Box>{item.title}</Box>
-            </WrapItem>
-          ))}
-        </Wrap>
-      </VStack>
+    <Container maxW="5xl" borderRadius={4} bg="gray.50" p={4}>
+      <HStack align="stretch" spacing={4}>
+        {Object.values(DefaultTaskStageMap).map((stage) => (
+          <Stage key={stage.id} stage={stage} />
+        ))}
+      </HStack>
     </Container>
   );
 };
-
-const items = [
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-  { title: "unok", content: "a;lsdkjf;alsdkjf;aldjf" },
-];
