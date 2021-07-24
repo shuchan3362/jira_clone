@@ -9,3 +9,5 @@ export const DefaultTaskStatusMap = {
   InProgress: { id: 2, title: "inprogress" },
   Done: { id: 3, title: "done" },
 };
+
+export const TaskCollectionName = "task";

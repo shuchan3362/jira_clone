@@ -1,7 +1,7 @@
 import React from "react";
 import { Heading, WrapItem, Text, Flex, useDisclosure } from "@chakra-ui/react";
 import { StatusItemType } from "type";
-import { Modal } from "Modal";
+import { Modal } from "views/Modal";
 import { Draggable } from "react-beautiful-dnd";
 
 type Props = {

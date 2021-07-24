@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { UseDisclosureProps, useToast } from "@chakra-ui/react";
-import { db } from "../firebase";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { db } from "../../firebase";
+import { UseFormReturn } from "react-hook-form";
 import { StatusItemType } from "type";
+import { TaskCollectionName } from "../../constants";
 
 type UseModal = {
   initialValues?: StatusItemType;
@@ -16,6 +17,7 @@ export const useModal = ({
 }: UseModal) => {
   const toast = useToast();
   const modalTitle = initialValues ? "タスクを編集" : "タスクを作成";
+  const firstOrderNumber = 10000;
 
   const onSubmit = handleSubmit(async (data: StatusItemType) => {
     if (initialValues) updateTask(data);
@@ -31,10 +33,11 @@ export const useModal = ({
 
   const createTask = useCallback(
     async (data: Omit<StatusItemType, "id" | "order">) => {
-      await db.collection("statusItem").add({
+      await db.collection(TaskCollectionName).add({
         title: data.title,
         content: data.content,
         statusId: Number(data.statusId),
+        // order: lastIndexOrder ? lastIndexOrder + 1 : firstOrderNumber,
       });
     },
     []
@@ -43,7 +46,7 @@ export const useModal = ({
   const updateTask = useCallback(
     async (data: StatusItemType) => {
       await db
-        .collection("statusItem")
+        .collection(TaskCollectionName)
         .doc(initialValues?.id)
         .update({
           title: data.title,
@@ -55,7 +58,7 @@ export const useModal = ({
   );
 
   const deleteTask = useCallback(async () => {
-    await db.collection("statusItem").doc(initialValues?.id).delete();
+    await db.collection(TaskCollectionName).doc(initialValues?.id).delete();
     onClose();
     toast({
       title: "タスクを削除しました",
@@ -63,7 +66,7 @@ export const useModal = ({
       duration: 3000,
       isClosable: true,
     });
-  }, [initialValues]);
+  }, [initialValues, toast, onClose]);
 
   const cloneTask = useCallback(async () => {
     if (initialValues) {
@@ -80,7 +83,7 @@ export const useModal = ({
       duration: 3000,
       isClosable: true,
     });
-  }, []);
+  }, [onClose, toast, createTask, initialValues]);
 
   return { onSubmit, deleteTask, cloneTask };
 };

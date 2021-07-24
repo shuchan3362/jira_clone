@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
-import { Board } from "board";
-import { GridBoard } from "gridBoard";
-import { NotFound } from "./NotFound";
-import { List } from "list";
+import { Board } from "views/board";
+import { GridBoard } from "views/gridBoard";
+import { NotFound } from "./views/NotFound";
+import { List } from "views/list";
 
 function Routes() {
   return (

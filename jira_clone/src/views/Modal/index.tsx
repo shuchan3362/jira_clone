@@ -27,7 +27,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 import { StatusItemType } from "type";
-import { DefaultTaskStatusMap } from "../constants";
+import { DefaultTaskStatusMap } from "../../constants";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { FaRegClone } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -39,12 +39,12 @@ type Props = {
 
 export const Modal: React.FC<Props> = (props) => {
   const { isOpen, onClose, initialValues } = props;
-  const modalTitle = initialValues ? "タスクを編集" : "タスクを作成";
+  const modalTitle = initialValues ? "編集" : "作成";
 
   const {
     register,
     formState: { errors, isSubmitting },
-    handleSubmit
+    handleSubmit,
   } = useForm({
     defaultValues: { ...initialValues },
   });
@@ -52,14 +52,14 @@ export const Modal: React.FC<Props> = (props) => {
   const { onSubmit, deleteTask, cloneTask } = useModal({
     initialValues,
     onClose,
-handleSubmit
+    handleSubmit,
   });
   return (
     <ChakraModal onClose={onClose} isOpen={isOpen} isCentered>
       <ModalOverlay />
       <ModalContent>
         <Flex>
-          <ModalHeader flex={1}>{modalTitle}</ModalHeader>
+          <ModalHeader flex={1}>{`タスクを${modalTitle}`}</ModalHeader>
           <Flex align="center" pr={2}>
             <Menu>
               <MenuButton
@@ -113,7 +113,7 @@ handleSubmit
           <ModalFooter>
             <HStack spacing={3}>
               <Button isLoading={isSubmitting} type="submit">
-                作成
+                {modalTitle}
               </Button>
               <Button onClick={onClose}>キャンセル</Button>
             </HStack>

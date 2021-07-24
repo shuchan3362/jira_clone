@@ -1,6 +1,6 @@
 import { Container } from "@chakra-ui/react";
-import { Content } from "gridBoard/Content";
-import { Header } from "Header";
+import { Content } from "views/gridBoard/Content";
+import { Header } from "views/Header";
 import React from "react";
 
 type Props = {};

@@ -1,18 +1,18 @@
 import React, { useCallback } from "react";
 import { Container, HStack } from "@chakra-ui/react";
-import { DefaultTaskStatusMap } from "../constants";
+import { TaskCollectionName, DefaultTaskStatusMap } from "../../constants";
 import { Status } from "./Status";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { StatusItemType } from "type";
-import { db } from "../firebase";
+import { db } from "../../firebase";
 import { calcTaskOrder } from "./util";
 
 type Props = {};
 
 export const Content: React.FC<Props> = () => {
   const [items] = useCollectionData<StatusItemType>(
-    db.collection("statusItem").orderBy("order"),
+    db.collection(TaskCollectionName).orderBy("order"),
     {
       idField: "id",
     }
@@ -20,10 +20,7 @@ export const Content: React.FC<Props> = () => {
 
   const onDragEnd = async (result: DropResult) => {
     const destination = result.destination;
-    const source = result.source;
     if (!destination) return;
-    const fromStatusId = Number(source.droppableId);
-    const fromIndex = source.index;
     const toStatusId = Number(destination.droppableId);
     const toIndex = destination.index;
     const taskId = result.draggableId;
@@ -39,7 +36,7 @@ export const Content: React.FC<Props> = () => {
 
   const updateTaskOrder = useCallback(
     async (taksId: string, order: number, statusId: number) => {
-      await db.collection("statusItem").doc(taksId).update({
+      await db.collection(TaskCollectionName).doc(taksId).update({
         order: order,
         statusId: statusId,
       });

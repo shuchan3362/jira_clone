@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useCallback } from "react";
 import { Modal } from "./Modal";
-import { TabsMap } from "./constants";
+import { TabsMap } from "../constants";
 import { useHistory } from "react-router-dom";
 
 type Props = {};

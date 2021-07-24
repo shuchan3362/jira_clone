@@ -1,4 +1,4 @@
-import { StatusItemType } from "../type";
+import { StatusItemType } from "../../type";
 
 const ORDER_INTERVAL = 1;
 const INITIAL_ORDER = 5;

@@ -1,6 +1,6 @@
 import { Container } from "@chakra-ui/react";
-import { Content } from "list/Content";
-import { Header } from "Header";
+import { Content } from "views/list/Content";
+import { Header } from "views/Header";
 import React from "react";
 
 type Props = {};
