@@ -1,22 +1,17 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { Container, HStack } from "@chakra-ui/react";
 import { TaskCollectionName, DefaultTaskStatusMap } from "../../constants";
 import { Status } from "./Status";
 import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { StatusItemType } from "type";
 import { db } from "../../firebase";
 import { calcTaskOrder } from "./util";
+import { TaskContext } from "context/TaskContext";
 
 type Props = {};
 
 export const Content: React.FC<Props> = () => {
-  const [items] = useCollectionData<StatusItemType>(
-    db.collection(TaskCollectionName).orderBy("order"),
-    {
-      idField: "id",
-    }
-  );
+  const { tasks, taskStatusMap } = useContext(TaskContext);
 
   const onDragEnd = async (result: DropResult) => {
     const destination = result.destination;
@@ -24,11 +19,11 @@ export const Content: React.FC<Props> = () => {
     const toStatusId = Number(destination.droppableId);
     const toIndex = destination.index;
     const taskId = result.draggableId;
-    const holdingTask = items?.find(
-      (item) => item.id === taskId
+    const holdingTask = tasks?.find(
+      (task) => task.id === taskId
     ) as StatusItemType;
-    const tasksByStatus = items?.filter(
-      (item) => item.statusId === toStatusId
+    const tasksByStatus = tasks?.filter(
+      (task) => task.statusId === toStatusId
     ) as StatusItemType[];
     const order = calcTaskOrder(holdingTask, tasksByStatus, toIndex);
     await updateTaskOrder(taskId, order, toStatusId);
@@ -48,23 +43,18 @@ export const Content: React.FC<Props> = () => {
     <Container maxW="5xl" borderRadius={4} p={4}>
       <HStack align="stretch" spacing={4}>
         <DragDropContext onDragEnd={onDragEnd}>
-          {Object.values(DefaultTaskStatusMap).map((status) => {
-            const itemsByStatus = items?.filter(
-              (item) => item.statusId === status.id
-            ) as StatusItemType[];
-            return (
-              <Droppable key={status.id} droppableId={String(status.id)}>
-                {(provided) => (
-                  <Status
-                    itemsByStatus={itemsByStatus}
-                    key={status.id}
-                    status={status}
-                    provided={provided}
-                  />
-                )}
-              </Droppable>
-            );
-          })}
+          {Object.values(DefaultTaskStatusMap).map((status) => (
+            <Droppable key={status.id} droppableId={String(status.id)}>
+              {(provided) => (
+                <Status
+                  itemsByStatus={taskStatusMap[status.id]}
+                  key={status.id}
+                  status={status}
+                  provided={provided}
+                />
+              )}
+            </Droppable>
+          ))}
         </DragDropContext>
       </HStack>
     </Container>

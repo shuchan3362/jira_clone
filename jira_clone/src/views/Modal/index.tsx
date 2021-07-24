@@ -35,10 +35,11 @@ import { useModal } from "./useModal";
 
 type Props = {
   initialValues?: StatusItemType;
+  taskStatusMap?: Record<number, StatusItemType[]>;
 } & Required<Pick<UseDisclosureProps, "onClose" | "isOpen">>;
 
 export const Modal: React.FC<Props> = (props) => {
-  const { isOpen, onClose, initialValues } = props;
+  const { isOpen, onClose, initialValues, taskStatusMap } = props;
   const modalTitle = initialValues ? "編集" : "作成";
 
   const {
@@ -49,10 +50,11 @@ export const Modal: React.FC<Props> = (props) => {
     defaultValues: { ...initialValues },
   });
 
-  const { onSubmit, deleteTask, cloneTask } = useModal({
+  const { onSubmit, deleteTask } = useModal({
     initialValues,
     onClose,
     handleSubmit,
+    taskStatusMap,
   });
   return (
     <ChakraModal onClose={onClose} isOpen={isOpen} isCentered>
@@ -70,7 +72,7 @@ export const Modal: React.FC<Props> = (props) => {
                 _hover={{ bg: theme.colors.gray[200] }}
               />
               <MenuList>
-                <MenuItem icon={<FaRegClone />} onClick={cloneTask}>
+                <MenuItem icon={<FaRegClone />} onClick={onSubmit("clone")}>
                   複製
                 </MenuItem>
                 <MenuItem icon={<RiDeleteBin6Line />} onClick={deleteTask}>
@@ -82,7 +84,7 @@ export const Modal: React.FC<Props> = (props) => {
             <ModalCloseButton position="unset" />
           </Flex>
         </Flex>
-        <form onSubmit={onSubmit}>
+        <form onSubmit={onSubmit("create")}>
           <ModalBody>
             <FormControl id="stageItem" isInvalid={!!errors.title}>
               <FormLabel>タイトル</FormLabel>

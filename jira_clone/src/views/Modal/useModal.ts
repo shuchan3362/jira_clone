@@ -8,39 +8,49 @@ import { TaskCollectionName } from "../../constants";
 type UseModal = {
   initialValues?: StatusItemType;
   handleSubmit: UseFormReturn["handleSubmit"];
+  taskStatusMap?: Record<number, StatusItemType[]>;
 } & Required<Pick<UseDisclosureProps, "onClose">>;
 
 export const useModal = ({
   initialValues,
   onClose,
   handleSubmit,
+  taskStatusMap,
 }: UseModal) => {
   const toast = useToast();
   const modalTitle = initialValues ? "タスクを編集" : "タスクを作成";
   const firstOrderNumber = 10000;
 
-  const onSubmit = handleSubmit(async (data: StatusItemType) => {
-    if (initialValues) updateTask(data);
-    else createTask(data);
-    onClose();
-    toast({
-      title: `${modalTitle}しました。`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
+  const onSubmit = (submitType?: string) =>
+    handleSubmit(async (data: StatusItemType) => {
+      if (submitType) createTask(data);
+      else if (initialValues) updateTask(data);
+      onClose();
+      toast({
+        title: `${
+          submitType === "clone" ? "タスクを複製" : modalTitle
+        }しました。`,
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
     });
-  });
 
   const createTask = useCallback(
     async (data: Omit<StatusItemType, "id" | "order">) => {
+      const statusId = Number(data.statusId);
+      const lastIndexOrder =
+        taskStatusMap && taskStatusMap[statusId]
+          ? taskStatusMap[statusId].slice(-1)[0].order
+          : firstOrderNumber;
       await db.collection(TaskCollectionName).add({
         title: data.title,
         content: data.content,
-        statusId: Number(data.statusId),
-        // order: lastIndexOrder ? lastIndexOrder + 1 : firstOrderNumber,
+        statusId: statusId,
+        order: lastIndexOrder + 1,
       });
     },
-    []
+    [taskStatusMap]
   );
 
   const updateTask = useCallback(
@@ -68,22 +78,5 @@ export const useModal = ({
     });
   }, [initialValues, toast, onClose]);
 
-  const cloneTask = useCallback(async () => {
-    if (initialValues) {
-      await createTask({
-        title: initialValues.title,
-        content: initialValues.content,
-        statusId: initialValues.statusId,
-      });
-    }
-    onClose();
-    toast({
-      title: "タスクを複製しました",
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
-  }, [onClose, toast, createTask, initialValues]);
-
-  return { onSubmit, deleteTask, cloneTask };
+  return { onSubmit, deleteTask };
 };

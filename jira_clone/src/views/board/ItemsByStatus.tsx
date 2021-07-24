@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Heading, WrapItem, Text, Flex, useDisclosure } from "@chakra-ui/react";
 import { StatusItemType } from "type";
 import { Modal } from "views/Modal";
 import { Draggable } from "react-beautiful-dnd";
+import { TaskContext } from "context/TaskContext";
 
 type Props = {
   item: StatusItemType;
@@ -11,6 +12,7 @@ type Props = {
 
 export const ItemsByStatus: React.FC<Props> = (props) => {
   const { item, index } = props;
+  const { taskStatusMap } = useContext(TaskContext);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const initialValues = {
     id: item.id,
@@ -50,7 +52,12 @@ export const ItemsByStatus: React.FC<Props> = (props) => {
           </div>
         )}
       </Draggable>
-      <Modal initialValues={initialValues} isOpen={isOpen} onClose={onClose} />
+      <Modal
+        initialValues={initialValues}
+        isOpen={isOpen}
+        onClose={onClose}
+        taskStatusMap={taskStatusMap}
+      />
     </>
   );
 };

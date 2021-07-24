@@ -7,10 +7,11 @@ import {
   Tab,
   Container,
 } from "@chakra-ui/react";
-import React, { useCallback } from "react";
+import React, { useCallback, useContext } from "react";
 import { Modal } from "./Modal";
 import { TabsMap } from "../constants";
 import { useHistory } from "react-router-dom";
+import { TaskContext } from "context/TaskContext";
 
 type Props = {};
 
@@ -19,6 +20,7 @@ type LocationName = keyof typeof TabsMap;
 export const Header: React.FC<Props> = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
+  const { taskStatusMap } = useContext(TaskContext);
 
   const handleChangeTab = useCallback(
     (tabIndex: number) => {
@@ -51,7 +53,7 @@ export const Header: React.FC<Props> = () => {
         </Tabs>
         <Button onClick={onOpen}>作成</Button>
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose} />
+      <Modal isOpen={isOpen} onClose={onClose} taskStatusMap={taskStatusMap} />
     </Container>
   );
 };
