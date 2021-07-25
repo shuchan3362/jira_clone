@@ -12,7 +12,7 @@ type Props = {
 
 export const ItemsByStatus: React.FC<Props> = (props) => {
   const { item, index } = props;
-  const { taskStatusMap } = useContext(TaskContext);
+  const { taskStatusMap, setTasks } = useContext(TaskContext);
   const { isOpen, onClose, onOpen } = useDisclosure();
   const initialValues = {
     id: item.id,
@@ -57,6 +57,7 @@ export const ItemsByStatus: React.FC<Props> = (props) => {
         isOpen={isOpen}
         onClose={onClose}
         taskStatusMap={taskStatusMap}
+        setTasks={setTasks}
       />
     </>
   );

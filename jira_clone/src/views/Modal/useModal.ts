@@ -1,14 +1,16 @@
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import { UseDisclosureProps, useToast } from "@chakra-ui/react";
 import { db } from "../../firebase";
 import { UseFormReturn } from "react-hook-form";
 import { StatusItemType } from "type";
 import { TaskCollectionName } from "../../constants";
+import { sortBy } from "lodash";
 
 type UseModal = {
   initialValues?: StatusItemType;
   handleSubmit: UseFormReturn["handleSubmit"];
   taskStatusMap?: Record<number, StatusItemType[]>;
+  setTasks: React.Dispatch<React.SetStateAction<StatusItemType[] | undefined>>;
 } & Required<Pick<UseDisclosureProps, "onClose">>;
 
 export const useModal = ({
@@ -16,6 +18,7 @@ export const useModal = ({
   onClose,
   handleSubmit,
   taskStatusMap,
+  setTasks,
 }: UseModal) => {
   const toast = useToast();
   const modalTitle = initialValues ? "タスクを編集" : "タスクを作成";
@@ -23,8 +26,9 @@ export const useModal = ({
 
   const onSubmit = (submitType?: string) =>
     handleSubmit(async (data: StatusItemType) => {
-      if (submitType) createTask(data);
+      if (submitType === "clone") createTask(data);
       else if (initialValues) updateTask(data);
+      else if (submitType) createTask(data);
       onClose();
       toast({
         title: `${
@@ -43,11 +47,15 @@ export const useModal = ({
         taskStatusMap && taskStatusMap[statusId]
           ? taskStatusMap[statusId].slice(-1)[0].order
           : firstOrderNumber;
-      await db.collection(TaskCollectionName).add({
+      const res = await db.collection(TaskCollectionName).add({
         title: data.title,
         content: data.content,
         statusId: statusId,
         order: lastIndexOrder + 1,
+      });
+      const newData = (await res.get()).data() as StatusItemType;
+      setTasks((prevValue) => {
+        return prevValue ? [...prevValue, newData] : [];
       });
     },
     [taskStatusMap]
@@ -55,20 +63,39 @@ export const useModal = ({
 
   const updateTask = useCallback(
     async (data: StatusItemType) => {
+      const params = {
+        title: data.title,
+        content: data.content,
+        statusId: Number(data.statusId),
+      };
       await db
         .collection(TaskCollectionName)
         .doc(initialValues?.id)
-        .update({
-          title: data.title,
-          content: data.content,
-          statusId: Number(data.statusId),
-        });
+        .update(params);
+      setTasks((prevValues) => {
+        const targetData = prevValues?.find(
+          (value) => value.id === initialValues?.id
+        );
+        const filteredPrevValue = prevValues?.filter(
+          (value) => value.id !== initialValues?.id
+        );
+        const newData = targetData ? { ...targetData, ...params } : undefined;
+        return filteredPrevValue && newData
+          ? sortBy([...filteredPrevValue, newData], "order")
+          : [];
+      });
     },
     [initialValues]
   );
 
   const deleteTask = useCallback(async () => {
     await db.collection(TaskCollectionName).doc(initialValues?.id).delete();
+    setTasks((prevValues) => {
+      const existingValues = prevValues?.filter(
+        (value) => value.id !== initialValues?.id
+      );
+      return existingValues;
+    });
     onClose();
     toast({
       title: "タスクを削除しました",

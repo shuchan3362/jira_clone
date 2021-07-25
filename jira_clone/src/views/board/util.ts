@@ -4,14 +4,12 @@ const ORDER_INTERVAL = 10000;
 const INITIAL_ORDER = 50000;
 
 export const calcTaskOrder = (
-  movedTask: StatusItemType,
+  holdingTask: StatusItemType | undefined,
   toStatusTasks: StatusItemType[],
   toIndex: number
 ) => {
-  if (toStatusTasks.includes(movedTask)) {
-    toStatusTasks = toStatusTasks.filter(
-      (ticket) => ticket.id !== movedTask.id
-    );
+  if (holdingTask && toStatusTasks.includes(holdingTask)) {
+    toStatusTasks = toStatusTasks.filter((task) => task.id !== holdingTask.id);
   }
   const prevTask: StatusItemType | undefined = toStatusTasks[toIndex - 1];
   const nextTask: StatusItemType | undefined = toStatusTasks[toIndex];

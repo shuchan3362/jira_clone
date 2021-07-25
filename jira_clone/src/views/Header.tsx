@@ -20,7 +20,7 @@ type LocationName = keyof typeof TabsMap;
 export const Header: React.FC<Props> = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const history = useHistory();
-  const { taskStatusMap } = useContext(TaskContext);
+  const { taskStatusMap, setTasks } = useContext(TaskContext);
 
   const handleChangeTab = useCallback(
     (tabIndex: number) => {
@@ -53,7 +53,12 @@ export const Header: React.FC<Props> = () => {
         </Tabs>
         <Button onClick={onOpen}>作成</Button>
       </HStack>
-      <Modal isOpen={isOpen} onClose={onClose} taskStatusMap={taskStatusMap} />
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        taskStatusMap={taskStatusMap}
+        setTasks={setTasks}
+      />
     </Container>
   );
 };

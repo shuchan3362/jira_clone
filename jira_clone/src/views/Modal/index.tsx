@@ -36,10 +36,11 @@ import { useModal } from "./useModal";
 type Props = {
   initialValues?: StatusItemType;
   taskStatusMap?: Record<number, StatusItemType[]>;
+  setTasks: React.Dispatch<React.SetStateAction<StatusItemType[] | undefined>>;
 } & Required<Pick<UseDisclosureProps, "onClose" | "isOpen">>;
 
 export const Modal: React.FC<Props> = (props) => {
-  const { isOpen, onClose, initialValues, taskStatusMap } = props;
+  const { isOpen, onClose, initialValues, taskStatusMap, setTasks } = props;
   const modalTitle = initialValues ? "編集" : "作成";
 
   const {
@@ -55,6 +56,7 @@ export const Modal: React.FC<Props> = (props) => {
     onClose,
     handleSubmit,
     taskStatusMap,
+    setTasks,
   });
   return (
     <ChakraModal onClose={onClose} isOpen={isOpen} isCentered>
