@@ -47,7 +47,7 @@ export const Content: React.FC<Props> = () => {
         }
       });
     },
-    []
+    [setTasks]
   );
 
   return (

@@ -58,7 +58,7 @@ export const useModal = ({
         return prevValue ? [...prevValue, newData] : [];
       });
     },
-    [taskStatusMap]
+    [taskStatusMap, setTasks]
   );
 
   const updateTask = useCallback(
@@ -85,7 +85,7 @@ export const useModal = ({
           : [];
       });
     },
-    [initialValues]
+    [initialValues, setTasks]
   );
 
   const deleteTask = useCallback(async () => {
@@ -103,7 +103,7 @@ export const useModal = ({
       duration: 3000,
       isClosable: true,
     });
-  }, [initialValues, toast, onClose]);
+  }, [initialValues, toast, onClose, setTasks]);
 
   return { onSubmit, deleteTask };
 };
